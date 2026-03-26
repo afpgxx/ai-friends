@@ -20,23 +20,27 @@ import SearchIcon from "@/components/navbar/icons/SearchIcon.vue";
         <div class="px-2 font-bold text-xl">AIFriends</div>
         </div>
 
-        <div class="navbar-center w-4/5 max-w-180">
+        <div class="navbar-center w-4/5 max-w-180 flex justify-center">
           <div class="join w-4/5">
-            <input class="input join-item w-4/5" placeholder="请输入你感兴趣的内容" />
-            <button className="btn join-item rounded-r-full gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 hover:from-blue-700 hover:to-indigo-700 text-white border-none shadow-lg hover:shadow-xl transition-all duration-300 px-6 font-medium">
-              <SearchIcon className="w-4 h-4" />
+            <input class="focus:outline-none focus:ring-0 input join-item w-4/5" placeholder="请输入你感兴趣的内容" />
+            <button class="btn join-item rounded-r-full gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 hover:from-blue-700 hover:to-indigo-700 text-white border-none shadow-lg hover:shadow-xl transition-all duration-300 px-6 font-medium">
+              <SearchIcon class="w-5 h-5" />
               搜索
             </button>
           </div>
         </div>
 
         <div class="navbar-end">
-          <button class="btn btn-ghost text-lg">登录</button>
-          <button class="btn btn-ghost text-lg">注册</button>
+          <RouterLink :to="{name: 'user-account-login-index'}" active-class="btn-active" class="btn btn-ghost text-lg">
+            登录
+          </RouterLink>
+          <RouterLink :to="{name: 'user-account-register-index'}" active-class="btn-active" class="btn btn-ghost text-lg">
+            注册
+          </RouterLink>
         </div>
       </nav>
       <!-- Page content here -->
-      <div class="p-4">页面内容</div>
+      <slot></slot>
     </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible">
@@ -45,24 +49,24 @@ import SearchIcon from "@/components/navbar/icons/SearchIcon.vue";
         <!-- Sidebar content here -->
         <ul class="menu w-full grow">
           <li>
-            <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="首页">
+            <RouterLink :to="{name: 'homepage-index'}" active-class="menu-focus" class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="首页">
                <HomePageIcon />
               <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">首页</span>
-            </button>
+            </RouterLink>
           </li>
 
           <li>
-            <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="好友">
+            <RouterLink :to="{name: 'friend-index'}" active-class="menu-focus" class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="好友">
               <FriendIcon />
-              <span class="is-drawer-close:hidden texe-base ml-2 whitespace-nowrap">好友</span>
-            </button>
+              <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">好友</span>
+            </RouterLink>
           </li>
 
           <li>
-            <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="创作">
+            <RouterLink :to="{name: 'create-index'}" active-class="menu-focus" class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="创作">
               <CreateIcon />
               <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">创作</span>
-            </button>
+            </RouterLink>
           </li>
         </ul>
       </div>
