@@ -3,12 +3,27 @@ import {userUserStore} from "@/stores/user.js";
 import UserSpaceIcon from "@/components/navbar/icons/UserSpaceIcon.vue";
 import UserProfileIcon from "@/components/navbar/icons/UserProfileIcon.vue";
 import UserLogoutIcon from "@/components/navbar/icons/UserLogoutIcon.vue";
+import {useRouter} from "vue-router";
+import api from "@/js/http/api.js";
 
 const user = userUserStore()
+const router = useRouter()
 
 function closeMenu() {
   const element = document.activeElement
   if (element && element instanceof HTMLElement) element.blur()
+}
+
+async function handelLogout() {
+  try {
+    const res = await api.post('api/user/account/logout/')
+    if (res.data.result === 'success') {
+      user.logout()
+      await router.push({name: 'user-account-login-index'})
+    }
+  } catch (Error) {
+    console.log(Error)
+  }
 }
 </script>
 
@@ -37,14 +52,14 @@ function closeMenu() {
         </RouterLink>
       </li>
       <li>
-        <RouterLink @click="closeMenu" :to="{name: 'user-profile-index', params: {user_id: user.id}}" class="text-sm font-bold py-3">
+        <RouterLink @click="closeMenu" :to="{name: 'user-profile-index'}" class="text-sm font-bold py-3">
           <UserProfileIcon/>
           编辑资料
         </RouterLink>
       </li>
       <li></li>
       <li>
-        <a @click="closeMenu" class="text-sm font-bold py-3">
+        <a @click="handelLogout" class="text-sm font-bold py-3">
           <UserLogoutIcon/>
           退出登录
         </a>

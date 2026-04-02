@@ -27,11 +27,6 @@ const router = createRouter({
       name: 'create-index',
     },
     {
-      path: '/404/',
-      component: NotFound404,
-      name: 'notfound-404',
-    },
-    {
       path: '/user/account/login',
       component: LoginIndex,
       name: 'user-account-login-index',

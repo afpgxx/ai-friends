@@ -9,7 +9,7 @@ from web.models.user import UserProfile
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            username = request.date['username'].strip()
+            username = request.data['username'].strip()
             password = request.data['password'].strip()
             if not username or not password:
                 return Response({
@@ -21,7 +21,7 @@ class LoginView(APIView):
                     'result': '用户名或密码错误!'
                 })
 
-            user_profile = UserProfile.objects.get(username=username)
+            user_profile = UserProfile.objects.get(user=user)
             refresh = RefreshToken.for_user(user)  # 生成jwt的refresh token
             response = Response({
                 'result': 'success',
@@ -42,6 +42,8 @@ class LoginView(APIView):
             return response
 
         except:
+            import traceback
+            traceback.print_exc()
             return Response({
                 'result': '系统异常，请稍后重试！'
             })
