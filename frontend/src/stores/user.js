@@ -7,6 +7,22 @@ export const userUserStore = defineStore('user', () => {
     const photo = ref('')
     const profile = ref('')
     const accessToken = ref('')
+    const hasPulledUserInfo = ref(false)
+
+    function initialize() {
+        const token = localStorage.getItem('accessToken')
+        const userInfo = localStorage.getItem('userInfo')
+
+        if (token && userInfo) {
+            accessToken.value = token
+            const info = JSON.parse(userInfo)
+            id.value = info.user_id
+            username.value = info.username
+            photo.value = photo.value
+
+        }
+        isReady.value = true // 标记初始化完成
+    }
 
     function isLogin() {
         return !!accessToken.value  // 不带value的accesstoken永远不为空
@@ -23,6 +39,10 @@ export const userUserStore = defineStore('user', () => {
         photo.value = data.photo
     }
 
+    function setHasPulledUserInfo(newStatus) {
+        hasPulledUserInfo.value = newStatus
+    }
+
     function logout() {
         id.value = 0
         username.value = ''
@@ -37,10 +57,11 @@ export const userUserStore = defineStore('user', () => {
         photo,
         profile,
         accessToken,
+        hasPulledUserInfo,
         isLogin,
         setAccessToken,
         setUserInfo,
         logout,
-
+        setHasPulledUserInfo,
     }
 })

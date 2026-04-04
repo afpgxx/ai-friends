@@ -42,7 +42,7 @@ async function handelLogout() {
               <img :src="user.photo" alt="">
             </div>
           </div>
-          <div class="text-base font-bold line-clamp-1 ml-2">{{ user.username }}</div>
+          <div class="text-base font-bold line-clamp-1 ml-2 break-all">{{ user.username }}</div>
         </RouterLink>
       </li>
       <li>
