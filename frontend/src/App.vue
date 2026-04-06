@@ -4,10 +4,11 @@ import {onMounted} from "vue";
 import {userUserStore} from "@/stores/user.js";
 import api from "@/js/http/api.js";
 import {useRoute} from "vue-router";
+import {useRouter} from "vue-router";
 
 const user = userUserStore()
 const route = useRoute()
-const router = userUserStore()
+const router = useRouter()
 
 onMounted(async () => {
   try {
@@ -22,7 +23,7 @@ onMounted(async () => {
     user.setHasPulledUserInfo(true)
 
     if (route.meta.needLogin && !user.isLogin()) {
-      router.replace('user-account-login-index')
+      await router.replace('user-account-login-index')
     }
   }
 })

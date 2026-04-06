@@ -13,26 +13,33 @@ const user = userUserStore()
 
 async function handleRegister() {
   errorMessage.value = ''
-  try {
-    const res = await api.post('api/user/account/register/', {
-      username: username.value,
-      password: password.value,
-      confirm_password: confirm_password.value
-    })
-
-    const data = res.data
-    if (data.result === 'success') {
-      user.setAccessToken(data.access)
-      user.setUserInfo(data)
-      await router.push({
-        name: 'homepage-index'
+  if (!username.value.trim()) {
+    errorMessage.value = '用户名不能为空'
+  } else if (!password.value.trim()) {
+    errorMessage.value = '密码不能为空'
+  } else if (password.value.trim() !== confirm_password.value.trim()) {
+    errorMessage.value = '两次输入的密码不一致'
+  } else {
+    try {
+      const res = await api.post('api/user/account/register/', {
+        username: username.value,
+        password: password.value,
+        confirm_password: confirm_password.value
       })
-    } else {
-      errorMessage.value = data.result
-    }
 
-  } catch (Error) {
-    console.log(Error)
+      const data = res.data
+      if (data.result === 'success') {
+        user.setAccessToken(data.access)
+        user.setUserInfo(data)
+        await router.push({
+          name: 'homepage-index'
+        })
+      } else {
+        errorMessage.value = data.result
+      }
+
+    } catch (Error) {
+    }
   }
 }
 </script>

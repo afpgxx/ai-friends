@@ -8,22 +8,6 @@ export const userUserStore = defineStore('user', () => {
     const profile = ref('')
     const accessToken = ref('')
     const hasPulledUserInfo = ref(false)
-
-    function initialize() {
-        const token = localStorage.getItem('accessToken')
-        const userInfo = localStorage.getItem('userInfo')
-
-        if (token && userInfo) {
-            accessToken.value = token
-            const info = JSON.parse(userInfo)
-            id.value = info.user_id
-            username.value = info.username
-            photo.value = photo.value
-
-        }
-        isReady.value = true // 标记初始化完成
-    }
-
     function isLogin() {
         return !!accessToken.value  // 不带value的accesstoken永远不为空
     }
