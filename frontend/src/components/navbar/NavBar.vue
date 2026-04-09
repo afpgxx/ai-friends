@@ -25,7 +25,7 @@ const user = userUserStore()
 
         <div class="navbar-center w-4/5 max-w-180 flex justify-center">
           <div class="join w-4/5">
-            <input class="focus:outline-none focus:ring-0 input join-item w-4/5" placeholder="请输入你感兴趣的内容" />
+            <input class="focus:outline-none focus:ring-0 input join-item w-4/5" placeholder="搜索你感兴趣的内容" />
             <button class="btn join-item rounded-r-full gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 hover:from-blue-700 hover:to-indigo-700 text-white border-none shadow-lg hover:shadow-xl transition-all duration-300 px-6 font-medium">
               <SearchIcon class="w-5 h-5" />
               搜索

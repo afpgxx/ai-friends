@@ -14,6 +14,7 @@ const photoRef = useTemplateRef('photo-ref')
 const usernameRef = useTemplateRef('username-ref')
 const profileRef = useTemplateRef('profile-ref')
 const errorMessage = ref('')
+const showToast = ref(false)
 
 async function handleUpdate() {
   const photo = photoRef.value.myPhoto
@@ -40,11 +41,15 @@ async function handleUpdate() {
       const data = res.data
       if (data.result === 'success') {
         user.setUserInfo(data)
+        showToast.value = true
+        setTimeout(() => {
+          showToast.value = false
+        }, 2000)
       } else {
-        errorMessage.value = data.result
+        errorMessage.value = '保存失败！' + data.result
       }
     } catch (error) {
-      console.log(error)
+      console.log('保存失败，', error)
     }
   }
 }
@@ -64,6 +69,15 @@ async function handleUpdate() {
           <button @click="handleUpdate" class="btn mt-2 w-full rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3 transition-all hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg">
             保存修改
           </button>
+
+          <div class="toast toast-top toast-center z-50" v-if="showToast">
+            <div class="alert alert-success shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>修改成功！</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
