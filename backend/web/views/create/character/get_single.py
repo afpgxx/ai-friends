@@ -1,0 +1,27 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+from web.models.character import Character
+from web.views.create.character.update import Res
+
+
+class GetSingleCharacterView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            character_id = request.query_params.get('character_id')
+            character = Character.objects.get(id=character_id, author__user=request.user)
+            return Response({
+                'result': "success",
+                'character': {
+                    'id': character_id,
+                    'name': character.name,
+                    'profile': character.profile,
+                    'photo': character.photo,
+                    'background_image': character.background_image,
+                }
+            })
+        except:
+            return Res("系统异常，请稍后重试！")

@@ -8,11 +8,6 @@ from web.models.user import UserProfile
 from web.views.utils.photo import remove_old_photo
 
 
-def Res(message):
-    return Response({
-        'result': message
-    })
-
 class UpdateProfileView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
@@ -22,23 +17,28 @@ class UpdateProfileView(APIView):
             username = request.data.get('username').strip()
             profile = request.data.get('profile').strip()[:500]
             photo = request.FILES.get('photo', None)
-            pre_profile = user_profile
-
+            print(User.objects.all())
             if not username:
-                return Res('用户名不能为空！')
+                return Response({
+                    'result': '用户名不能为空'
+                })
             if not profile:
-                return Res('个人简介不能为空！')
+                return Response({
+                    'result': '简介不能为空'
+                })
             if username != user.username and User.objects.filter(username=username).exists():
-                return Res('该用户名已存在！')
+                return Response({
+                    'result': '用户名已存在'
+                })
+
             if photo:
+                remove_old_photo(user_profile.photo)
                 user_profile.photo = photo
-                remove_old_photo(photo)
             user_profile.profile = profile
             user_profile.update_time = now()
             user_profile.save()
             user.username = username
             user.save()
-
             return Response({
                 'result': 'success',
                 'user_id': user.id,
@@ -47,4 +47,6 @@ class UpdateProfileView(APIView):
                 'photo': user_profile.photo.url,
             })
         except:
-            return Res("系统异常，请稍后再试！")
+            return Response({
+                'result': '系统异常，请稍后重试'
+            })
