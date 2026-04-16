@@ -58,7 +58,6 @@ function onFileChange(e) {
   reader.onload = () => {
     openModal(reader.result)
   }
-
   reader.readAsDataURL(file)
 }
 
@@ -83,7 +82,6 @@ defineExpose({
 
   <dialog ref="modal-ref" class="modal">
     <div class="modal-box transition-none">
-      <button @click="modalRef.close()" class="btn btn-circle btn-sm btn-ghost absolute right-2 top-2"></button>
       <div ref="croppie-ref" class="flex flex-col justify-center my-4"></div>
 
       <div class="modal-action">
