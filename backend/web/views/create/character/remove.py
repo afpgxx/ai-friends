@@ -14,5 +14,6 @@ class RemoveCharacterView(APIView):
         try:
             character_id = request.data['character_id']
             Character.objects.filter(pk=character_id, author__user=request.user).delete()
+            return Res("success")
         except:
             return Res("系统异常，请稍后重试！")
