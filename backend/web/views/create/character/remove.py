@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from web.models.character import Character
 from web.views.create.character.update import Res
+from web.views.utils.photo import remove_old_photo
 
 
 class RemoveCharacterView(APIView):
@@ -13,7 +14,10 @@ class RemoveCharacterView(APIView):
     def post(self, request):
         try:
             character_id = request.data['character_id']
-            Character.objects.filter(pk=character_id, author__user=request.user).delete()
+            character = Character.objects.get(pk=character_id, author__user=request.user).delete()
+            remove_old_photo(character.photo)
+            remove_old_photo(character.background_image)
+            character.delete()
             return Res("success")
         except:
             return Res("系统异常，请稍后重试！")
