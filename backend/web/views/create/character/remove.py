@@ -14,7 +14,7 @@ class RemoveCharacterView(APIView):
     def post(self, request):
         try:
             character_id = request.data['character_id']
-            character = Character.objects.get(pk=character_id, author__user=request.user).delete()
+            character = Character.objects.get(pk=character_id, author__user=request.user)
             remove_old_photo(character.photo)
             remove_old_photo(character.background_image)
             character.delete()

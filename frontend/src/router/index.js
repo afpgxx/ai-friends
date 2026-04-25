@@ -66,7 +66,7 @@ const router = createRouter({
       component: SpaceIndex,
       name: 'user-space-index',
       meta: {
-        needLogin: true,
+        needLogin: false,
       }
     },
     {
