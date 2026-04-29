@@ -66,7 +66,7 @@ async function loadMore() {
 let observer = null
 onMounted(async () => {
   await loadMore()
-  await nextTick()
+  await nextTick()  // 等待DOM页面加载完毕，防止哨兵sentinelRef没有赋值就被observe
 
   observer = new IntersectionObserver(
       entries => {
