@@ -1,14 +1,17 @@
 <script setup>
-import {ref} from "vue";
+import {ref, useTemplateRef} from "vue";
 import {userUserStore} from "@/stores/user.js";
 import UpdateIcon from "@/components/character/icons/UpdateIcon.vue";
 import RemoveIcon from "@/components/character/icons/RemoveIcon.vue";
 import api from "@/js/http/api.js";
+import ChatField from "@/components/character/chat_field/ChatField.vue";
+import {useRouter} from "vue-router";
 
 const props = defineProps(['character', 'canEdit'])
 const emit = defineEmits(['remove'])
 const isHover = ref(false)
 const user = userUserStore()
+const router = useRouter()
 
 async function handleRemoveCharacter() {
   try{
@@ -22,11 +25,36 @@ async function handleRemoveCharacter() {
     console.log(error)
   }
 }
+
+const chatFieldRef = useTemplateRef('chat-field-ref')
+const friend = ref(null)
+
+async function openChatField() {
+  if (!user.isLogin()) {
+    await router.push({
+      name: 'user-account-login-index'
+    })
+  } else {
+    try{
+      const res = await api.post('/api/friend/get_or_create/', {
+        character_id: props.character.id,
+      })
+
+      const data = res.data
+      if (data.result === 'success') {
+        friend.value = data.friend
+        chatFieldRef.value.showModal()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
 </script>
 
 <template>
   <div>
-  <div class="avatar cursor-pointer" @mouseover="isHover = true" @mouseout="isHover = false">
+  <div class="avatar cursor-pointer" @mouseover="isHover = true" @mouseout="isHover = false" @click="openChatField">
     <div class="w-60 h-100 rounded-2xl relative overflow-hidden">
       <img
         :src="character.background_image"
@@ -75,6 +103,7 @@ async function handleRemoveCharacter() {
       <div class="text-sm line-clamp-1 break-all">{{ character.author.username }}</div>
     </div>
   </RouterLink>
+    <ChatField ref="chat-field-ref" :friend="friend" />
   </div>
 </template>
 
