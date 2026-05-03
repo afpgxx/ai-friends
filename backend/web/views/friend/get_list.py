@@ -14,7 +14,7 @@ class GetListFriendView(APIView):
             items_count = int(request.query_params.get('items_count', 0))
             friend_raw = Friend.objects.filter(
                 me__user=request.user
-            ).order_by('-update_time')[items_count: items_count + 20]
+            ).order_by('-create_time')[items_count: items_count + 20]
             friends = []
             for friend in friend_raw:
                 character = friend.character
