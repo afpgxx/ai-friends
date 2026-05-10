@@ -9,7 +9,7 @@
 */
 
 import axios from "axios"
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 
 const BASE_URL = 'http://127.0.0.1:8000'
 
@@ -19,7 +19,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-    const user = userUserStore()
+    const user = useUserStore()
     if (user.accessToken) {
         config.headers.Authorization = `Bearer ${user.accessToken}`
     }
@@ -46,7 +46,7 @@ function onRefreshFailed(err) {
 api.interceptors.response.use(
     response => response,
     async error => {
-        const user = userUserStore()
+        const user = useUserStore()
         const originalRequest = error?.config
         if (!originalRequest) {
             return Promise.reject(error)

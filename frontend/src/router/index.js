@@ -7,7 +7,7 @@ import LoginIndex from "@/views/user/accounrt/LoginIndex.vue";
 import FriendIndex from "@/views/friend/FriendIndex.vue";
 import CreateIndex from "@/views/create/CreateIndex.vue";
 import ProfileIndex from "@/views/user/profile/ProfileIndex.vue";
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import UpdateCharacter from "@/views/create/character/UpdateCharacter.vue";
 
 const router = createRouter({
@@ -89,7 +89,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  const user = userUserStore()
+  const user = useUserStore()
   if (to.meta.needLogin && user.hasPulledUserInfo && !user.isLogin()) {
     return {name: "user-account-login-index"}
   }

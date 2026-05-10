@@ -1,6 +1,6 @@
 <script setup>
 
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import Photo from "@/views/user/profile/components/Photo.vue";
 import Username from "@/views/user/profile/components/Username.vue";
 import Profile from "@/views/user/profile/components/Profile.vue";
@@ -8,7 +8,7 @@ import {ref, useTemplateRef} from "vue";
 import api from "@/js/http/api.js";
 import {base64ToFile} from "@/js/utils/base64_to_files.js";
 
-const user = userUserStore()
+const user = useUserStore()
 
 const photoRef = useTemplateRef('photo-ref')
 const usernameRef = useTemplateRef('username-ref')

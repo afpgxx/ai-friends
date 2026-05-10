@@ -1,12 +1,12 @@
 <script setup>
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import UserSpaceIcon from "@/components/navbar/icons/UserSpaceIcon.vue";
 import UserProfileIcon from "@/components/navbar/icons/UserProfileIcon.vue";
 import UserLogoutIcon from "@/components/navbar/icons/UserLogoutIcon.vue";
 import {useRouter} from "vue-router";
 import api from "@/js/http/api.js";
 
-const user = userUserStore()
+const user = useUserStore()
 const router = useRouter()
 
 function closeMenu() {

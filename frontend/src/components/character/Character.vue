@@ -1,6 +1,6 @@
 <script setup>
 import {ref, useTemplateRef} from "vue";
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import UpdateIcon from "@/components/character/icons/UpdateIcon.vue";
 import RemoveIcon from "@/components/character/icons/RemoveIcon.vue";
 import api from "@/js/http/api.js";
@@ -10,7 +10,7 @@ import {useRouter} from "vue-router";
 const props = defineProps(['character', 'canEdit', 'canRemoveFriend', 'friendId'])
 const emit = defineEmits(['remove'])
 const isHover = ref(false)
-const user = userUserStore()
+const user = useUserStore()
 const router = useRouter()
 
 async function handleRemoveCharacter() {

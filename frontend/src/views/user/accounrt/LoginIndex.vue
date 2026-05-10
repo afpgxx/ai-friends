@@ -1,7 +1,7 @@
 <script setup>
 
 import {ref} from "vue";
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import {useRouter} from "vue-router";
 import api from "@/js/http/api.js";
 
@@ -10,7 +10,7 @@ const password = ref('')
 const errorMessage = ref('')
 
 const router = useRouter()
-const user = userUserStore()
+const user = useUserStore()
 
 async function handelLogin() {
   errorMessage.value = ''

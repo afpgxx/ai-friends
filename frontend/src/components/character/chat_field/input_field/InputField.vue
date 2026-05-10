@@ -1,22 +1,56 @@
 <script setup>
-import { ref, nextTick } from 'vue'
+import {ref, nextTick, useTemplateRef} from 'vue'
 import MicIcon from "@/components/character/icons/MicIcon.vue";
 import SendIcon from "@/components/character/icons/SendIcon.vue";
+import api from "@/js/http/api.js";
+import streamApi from "@/js/http/streamApi.js";
 
 // 双向绑定消息内容
 const messageText = ref('')
-const textareaRef = ref(null)
+const textareaRef = useTemplateRef('textarea-ref')
+const props = defineProps(['friendId'])
+let isProcessing = false
 
 // 发送消息逻辑（对外暴露事件）
 const emit = defineEmits(['send'])
 
+async function focus() {
+  await nextTick()
+  textareaRef.value?.focus()
+}
+
 // 发送消息
-const sendMessage = () => {
-  const content = messageText.value.trim()
+async function sendMessage() {
+  if (isProcessing) return
+  isProcessing = true
+
+  const content = messageText.value?.trim()
   if (!content) return
 
   emit('send', content)
   messageText.value = ''
+
+  try {
+    await streamApi('/api/friend/message/chat/', {
+      body: {
+        friend_id: props.friendId,
+        content: content,
+      },
+      onmessage(data, isDone) {
+        if (isDone) {
+          isProcessing = false
+        } else if (data.content) {
+          console.log(data.content)
+        }
+      },
+      onerror(error) {
+        isProcessing = false
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    isProcessing = false
+  }
 
   // 发送后重置高度
   nextTick(() => {
@@ -42,7 +76,8 @@ defineExpose({
   setMessage: (text) => {
     messageText.value = text
     autoResize()
-  }
+  },
+  focus,
 })
 </script>
 
@@ -64,7 +99,7 @@ defineExpose({
 
       <!-- 文本输入区 -->
       <textarea
-        ref="textareaRef"
+        ref="textarea-ref"
         v-model="messageText"
         rows="1"
         class="textarea textarea-bordered flex-1 resize-none min-h-[40px] max-h-32 bg-base-100 rounded-xl border-none focus:outline-none focus:ring-0 shadow-none text-base leading-relaxed"

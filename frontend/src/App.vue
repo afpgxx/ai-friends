@@ -1,12 +1,12 @@
 <script setup>
 import NavBar from "@/components/navbar/NavBar.vue";
 import {onMounted} from "vue";
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import api from "@/js/http/api.js";
 import {useRoute} from "vue-router";
 import {useRouter} from "vue-router";
 
-const user = userUserStore()
+const user = useUserStore()
 const route = useRoute()
 const router = useRouter()
 

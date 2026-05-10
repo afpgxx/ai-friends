@@ -1,14 +1,20 @@
 <script setup>
 
-import {computed, useTemplateRef} from "vue";
+import {computed, nextTick, useTemplateRef} from "vue";
 import InputField from "@/components/character/chat_field/input_field/InputField.vue";
 import CharacterPhotoField from "@/components/character/chat_field/character_photo_field/CharacterPhotoField.vue";
 
 const props = defineProps(['friend'])
 const modalRef = useTemplateRef('modal-ref')
+const inputFieldRef = useTemplateRef('input-field-ref')
 
-function showModal() {
+async function showModal() {
   modalRef.value.showModal()
+
+  await nextTick()
+  setTimeout(() => {
+    inputFieldRef.value?.focus()
+  }, 200)  // 增加延迟，等待模态框动画完成
 }
 
 const modalStyle = computed(() => {
@@ -40,7 +46,10 @@ defineExpose({
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-      <InputField />
+      <InputField
+          v-if="friend"
+          ref="input-field-ref"
+          :friendId="friend.id" />
       <CharacterPhotoField v-if="friend" :character="friend.character" />
     </div>
   </dialog>

@@ -25,7 +25,7 @@ class GetOrCreateFriendView(APIView):
             return Response({
                 'result': 'success',
                 'friend': {
-                    'id': character.id,
+                    'id': friend.id,
                     'character': {
                         'name': character.name,
                         'profile': character.profile,

@@ -8,7 +8,7 @@ import {onMounted, ref, useTemplateRef} from "vue";
 import {base64ToFile} from "@/js/utils/base64_to_files.js";
 import api from "@/js/http/api.js";
 import {useRoute, useRouter} from "vue-router";
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 
 const photoRef = useTemplateRef('photo-ref')
 const nameRef = useTemplateRef('name-ref')
@@ -17,7 +17,7 @@ const backgroundImageRef = useTemplateRef('background-image-ref')
 const errorMessage = ref('')
 
 const router = useRouter()
-const user = userUserStore()
+const user = useUserStore()
 const route = useRoute()
 const characterId = route.params.character_id
 const character = ref(null)

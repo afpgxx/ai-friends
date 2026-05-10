@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
 import {useRouter} from "vue-router";
-import {userUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/user.js";
 import api from "@/js/http/api.js";
 
 const username = ref('')
@@ -9,7 +9,7 @@ const password = ref('')
 const confirm_password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
-const user = userUserStore()
+const user = useUserStore()
 
 async function handleRegister() {
   errorMessage.value = ''
