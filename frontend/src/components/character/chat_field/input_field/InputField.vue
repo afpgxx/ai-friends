@@ -12,7 +12,7 @@ const props = defineProps(['friendId'])
 let isProcessing = false
 
 // 发送消息逻辑（对外暴露事件）
-const emit = defineEmits(['send'])
+const emit = defineEmits(['send', 'pushBackMessage', 'addToLastMessage'])
 
 async function focus() {
   await nextTick()
@@ -30,6 +30,9 @@ async function sendMessage() {
   emit('send', content)
   messageText.value = ''
 
+  emit('pushBackMessage', {role: 'user', content: content, id: crypto.randomUUID()})
+  emit("pushBackMessage", {role: 'ai', content: '', id:crypto.randomUUID()})
+
   try {
     await streamApi('/api/friend/message/chat/', {
       body: {
@@ -40,7 +43,7 @@ async function sendMessage() {
         if (isDone) {
           isProcessing = false
         } else if (data.content) {
-          console.log(data.content)
+          emit('addToLastMessage', data.content)
         }
       },
       onerror(error) {
@@ -62,9 +65,10 @@ async function sendMessage() {
 
 // 自动调整 textarea 高度
 const autoResize = () => {
-  if (!textareaRef.value) return
-  textareaRef.value.style.height = 'auto'
-  textareaRef.value.style.height = `${Math.min(textareaRef.value.scrollHeight, 128)}px`
+    if (!textareaRef.value) return
+
+  // 让 textarea 滚动到底部，显示最新输入的内容
+  textareaRef.value.scrollTop = textareaRef.value.scrollHeight
 }
 
 // 暴露清空方法等（可选）
@@ -102,23 +106,15 @@ defineExpose({
         ref="textarea-ref"
         v-model="messageText"
         rows="1"
-        class="textarea textarea-bordered flex-1 resize-none min-h-[40px] max-h-32 bg-base-100 rounded-xl border-none focus:outline-none focus:ring-0 shadow-none text-base leading-relaxed"
+        class="textarea textarea-bordered overflow-y-auto flex-1 resize-none min-h-[40px] max-h-32 bg-base-100 rounded-xl border-none focus:outline-none focus:ring-0 shadow-none text-base leading-relaxed"
         placeholder="输入消息..."
         @keydown.enter.exact.prevent="sendMessage"
         @input="autoResize"
+        style="scroll-behavior: auto;"
       ></textarea>
 
       <!-- 右侧发送按钮 -->
       <SendIcon :messageText="messageText" :sendMessage="sendMessage"/>
-    </div>
-
-    <!-- 附带的提示/状态栏 (美观) -->
-    <div class="flex justify-between items-center text-xs text-base-content/40 px-1">
-      <span class="flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
-        输入中...
-      </span>
-      <span>支持 Markdown ✨</span>
     </div>
   </div>
 </template>
