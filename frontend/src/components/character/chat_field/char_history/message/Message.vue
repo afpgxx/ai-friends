@@ -34,7 +34,7 @@ const formatTime = (timestamp) => {
         <time class="text-xs ml-1">{{ formatTime(message.timestamp) }}</time>
       </div>
       <div class="whitespace-pre-wrap chat-bubble bg-gradient-to-r from-primary/10 to-secondary/10 text-base-content shadow-md backdrop-blur-sm border border-primary/20">
-        <div class="prose prose-sm max-w-none">
+        <div class="prose prose-sm max-w-none break-all">
           {{ message.content }}
         </div>
       </div>
@@ -55,7 +55,7 @@ const formatTime = (timestamp) => {
         <time class="text-xs ml-1">{{ formatTime(message.timestamp) }}</time>
       </div>
       <div class="whitespace-pre-wrap chat-bubble bg-gradient-to-l from-secondary/90 to-primary/90 text-white shadow-md">
-        <div class="prose prose-sm prose-invert max-w-none">
+        <div class="prose prose-sm prose-invert max-w-none break-all">
           {{ message.content }}
         </div>
       </div>
