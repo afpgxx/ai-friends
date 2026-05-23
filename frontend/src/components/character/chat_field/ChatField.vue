@@ -47,6 +47,11 @@ function handlePushFrontMessage(msg) {
   history.value.unshift(msg)
 }
 
+function handleClose() {
+  modalRef.value.close()
+  inputFieldRef.value.close()
+}
+
 defineExpose({
   showModal,
 })
@@ -56,7 +61,7 @@ defineExpose({
   <dialog ref="modal-ref" class="modal">
     <div class="modal-box w-90 h-150 transition-all duration-200" :style="modalStyle" @click.stop>
       <button
-        @click="modalRef.close()"
+        @click="handleClose"
         class="btn btn-sm btn-circle backdrop-blur-md bg-white/20 hover:bg-red-500/80 text-gray-700 hover:text-white border border-white/30 absolute right-2 top-2 transition-all duration-300 hover:scale-110 hover:rotate-90 z-10"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">

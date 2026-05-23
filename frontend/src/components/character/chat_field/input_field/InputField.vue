@@ -2,14 +2,15 @@
 import {ref, nextTick, useTemplateRef} from 'vue'
 import MicIcon from "@/components/character/icons/MicIcon.vue";
 import SendIcon from "@/components/character/icons/SendIcon.vue";
-import api from "@/js/http/api.js";
 import streamApi from "@/js/http/streamApi.js";
+import Microphone from "@/components/character/chat_field/input_field/Microphone.vue";
 
 // 双向绑定消息内容
 const messageText = ref('')
 const textareaRef = useTemplateRef('textarea-ref')
 const props = defineProps(['friendId'])
-let isProcessing = false
+const showMic = ref(false)
+let processId = 0
 
 // 发送消息逻辑（对外暴露事件）
 const emit = defineEmits(['send', 'pushBackMessage', 'addToLastMessage'])
@@ -20,14 +21,16 @@ async function focus() {
 }
 
 // 发送消息
-async function sendMessage() {
-  if (isProcessing) return
-  isProcessing = true
-
-  const content = messageText.value?.trim()
+async function sendMessage(event, audio_msg) {
+  let content;
+  if (audio_msg) {
+    content = audio_msg.trim()
+  } else {
+    content = messageText.value?.trim()
+  }
   if (!content) return
 
-  emit('send', content)
+  const curId = ++ processId
   messageText.value = ''
 
   emit('pushBackMessage', {role: 'user', content: content, id: crypto.randomUUID()})
@@ -40,19 +43,16 @@ async function sendMessage() {
         content: content,
       },
       onmessage(data, isDone) {
-        if (isDone) {
-          isProcessing = false
-        } else if (data.content) {
+        if (curId !== processId) return
+
+        if (data.content) {
           emit('addToLastMessage', data.content)
         }
       },
       onerror(error) {
-        isProcessing = false
       },
     })
   } catch (error) {
-    console.log(error)
-    isProcessing = false
   }
 
   // 发送后重置高度
@@ -71,6 +71,15 @@ const autoResize = () => {
   textareaRef.value.scrollTop = textareaRef.value.scrollHeight
 }
 
+function close() {
+  ++ processId
+  showMic.value = false
+}
+
+function handleStop() {
+  ++ processId
+}
+
 // 暴露清空方法等（可选）
 defineExpose({
   clearInput: () => {
@@ -82,17 +91,18 @@ defineExpose({
     autoResize()
   },
   focus,
+  close,
 })
 </script>
 
 <template>
-  <div class="absolute bottom-0 left-0 right-0 p-4 bg-base-100/80 backdrop-blur-sm border-t border-base-200 rounded-b-2xl">
+  <div v-if="!showMic" class="absolute bottom-0 left-0 right-0 p-4 bg-base-100/80 backdrop-blur-sm border-t border-base-200 rounded-b-2xl">
     <!-- 输入框主体 -->
     <div class="flex items-center gap-2 bg-base-200 rounded-2xl p-2 shadow-inner transition-all duration-200 focus-within:ring-2 focus-within:ring-primary/50">
       <!-- 左侧功能按钮区 -->
       <div class="flex items-center gap-1">
         <!-- 麦克风/语音输入按钮 -->
-        <MicIcon />
+        <MicIcon @click="showMic = true" />
         <!-- 附件/图片按钮 -->
         <button type="button" class="btn btn-sm btn-ghost btn-circle text-base-content/60 hover:text-primary transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
@@ -117,6 +127,12 @@ defineExpose({
       <SendIcon :messageText="messageText" :sendMessage="sendMessage"/>
     </div>
   </div>
+  <Microphone
+      v-else
+      @close="showMic = false"
+      @send="sendMessage"
+      @stop="handleStop"
+  />
 </template>
 
 <style scoped>
