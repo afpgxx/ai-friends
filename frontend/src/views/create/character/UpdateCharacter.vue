@@ -9,9 +9,11 @@ import {base64ToFile} from "@/js/utils/base64_to_files.js";
 import api from "@/js/http/api.js";
 import {useRoute, useRouter} from "vue-router";
 import {useUserStore} from "@/stores/user.js";
+import Voice from "@/views/create/character/components/Voice.vue";
 
 const photoRef = useTemplateRef('photo-ref')
 const nameRef = useTemplateRef('name-ref')
+const voiceRef = useTemplateRef('voice-ref')
 const profileRef = useTemplateRef('profile-ref')
 const backgroundImageRef = useTemplateRef('background-image-ref')
 const errorMessage = ref('')
@@ -21,6 +23,9 @@ const user = useUserStore()
 const route = useRoute()
 const characterId = route.params.character_id
 const character = ref(null)
+
+const voices = ref([])
+const curVoiceId = ref(null)
 
 onMounted(async () => {
   try {
@@ -33,6 +38,8 @@ onMounted(async () => {
     const data = res.data
     if (data.result === 'success') {
       character.value = data.character
+      voices.value = data.voices
+      curVoiceId.value = data.character.voice_id
     }
   } catch (error) {
     console.log(error)
@@ -42,6 +49,7 @@ onMounted(async () => {
 async function handelUpdate() {
   const photo = photoRef.value.myPhoto
   const name = nameRef.value.myName?.trim()
+  const voice = voiceRef.value.myVoice
   const profile = profileRef.value.myProfile?.trim()
   const backgroundImage = backgroundImageRef.value.myBackgroundImage
 
@@ -50,6 +58,8 @@ async function handelUpdate() {
     errorMessage.value = '头像不能为空!'
   } else if (!name) {
     errorMessage.value = '角色名不能为空!'
+  } else if (!voice) {
+    errorMessage.value = '音色不能为空！'
   } else if (!profile) {
     errorMessage.value = '角色简介不能为空!'
   } else if (!backgroundImage) {
@@ -58,6 +68,7 @@ async function handelUpdate() {
     const formData = new FormData()
     formData.append('character_id', characterId)
     formData.append('name', name)
+    formData.append('voice_id', voice)
     formData.append('profile', profile)
 
     if (photo !== character.value.photo) {
@@ -93,6 +104,7 @@ async function handelUpdate() {
         <h3 class="text-lg font-bold my-0">更新角色</h3>
         <Photo ref="photo-ref" :photo="character.photo"/>
         <Name ref="name-ref" :name="character.name"/>
+        <Voice ref="voice-ref" :voices="voices" :cur-voice-id="curVoiceId" />
         <Profile ref="profile-ref" :profile="character.profile"/>
         <BackgroundImage ref="background-image-ref" :backgroundImage="character.background_image"/>
         <p v-if="errorMessage" class="text-sm text-red-500">{{errorMessage}}</p>
