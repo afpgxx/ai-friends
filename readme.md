@@ -1,1 +1,1 @@
-### 大模型开发应用课 ###
+### chat-with online ai-friends ###
